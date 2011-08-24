@@ -16,25 +16,25 @@
 *   along with this program.  If not, see <http://www.gnu.org/licenses/>.    *
 *****************************************************************************/
 
-#include "konqprofilesservice.h"
+#include "kateprofilesservice.h"
 
 #include <QtCore/QMap>
 #include <KToolInvocation>
 #include <KDebug>
 
-KonqProfilesService::KonqProfilesService(QObject* parent, const QString& profileName)
+KateProfilesService::KateProfilesService(QObject* parent, const QString& profileName)
     : Plasma::Service(parent)
 {
-    setName("org.kde.plasma.dataengine.konqprofiles");
+    setName("org.kde.plasma.dataengine.kateprofiles");
     setDestination(profileName);
 }
 
-Plasma::ServiceJob* KonqProfilesService::createJob(const QString& operation, QMap<QString,QVariant>& parameters)
+Plasma::ServiceJob* KateProfilesService::createJob(const QString& operation, QMap<QString,QVariant>& parameters)
 {
     return new ProfileJob(this, operation, parameters);
 }
 
-ProfileJob::ProfileJob(KonqProfilesService *service, const QString &operation, const QMap<QString, QVariant> &parameters)
+ProfileJob::ProfileJob(KateProfilesService *service, const QString &operation, const QMap<QString, QVariant> &parameters)
     : Plasma::ServiceJob(service->destination(), operation, parameters, service)
 {
 }
@@ -57,4 +57,4 @@ kDebug() << "SERVICE START...operation: " << operation << " dest: " << destinati
     }
 }
 
-#include "konqprofilesservice.moc"
+#include "kateprofilesservice.moc"

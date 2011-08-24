@@ -16,24 +16,24 @@
 *   along with this program.  If not, see <http://www.gnu.org/licenses/>.    *
 *****************************************************************************/
 
-#ifndef KONQPROFILESENGINE_H
-#define KONQPROFILESENGINE_H
+#ifndef KATEPROFILESENGINE_H
+#define KATEPROFILESENGINE_H
 
 #include <Plasma/DataEngine>
 
 class KDirWatch;
 
 /**
- * This engine provides the list of session applets for konqueror, as well
+ * This engine provides the list of session applets for kate, as well
  * as support to open/launch them.
  */
-class KonqProfilesEngine : public Plasma::DataEngine
+class KateProfilesEngine : public Plasma::DataEngine
 {
     Q_OBJECT
 
 public:
-    KonqProfilesEngine(QObject *parent, const QVariantList &args);
-    ~KonqProfilesEngine();
+    KateProfilesEngine(QObject *parent, const QVariantList &args);
+    ~KateProfilesEngine();
 
     void init();
     Plasma::Service *serviceForSource(const QString &source);
