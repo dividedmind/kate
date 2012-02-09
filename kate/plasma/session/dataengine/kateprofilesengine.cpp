@@ -74,7 +74,7 @@ void KateProfilesEngine::loadProfiles()
         name = QUrl::fromPercentEncoding(QFile::encodeName(url.fileName()));
         kDebug() << "translated: " << name;
         name.chop(12);///.katesession==12
-        setData(name, QVariant());
+        setData("name:" + name, QVariant());
     }
 }
 
