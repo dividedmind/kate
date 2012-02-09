@@ -25,7 +25,7 @@
 KateProfilesService::KateProfilesService(QObject* parent, const QString& profileName)
     : Plasma::Service(parent)
 {
-    setName("org.kde.plasma.dataengine.kateprofiles");
+    setName("org.kde.kateprofiles");
     setDestination(profileName);
 }
 

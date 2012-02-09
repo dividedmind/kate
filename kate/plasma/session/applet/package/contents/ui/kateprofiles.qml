@@ -26,7 +26,7 @@ Item {
 
     PlasmaCore.DataSource {
         id: profilesSource
-        engine: "org.kde.plasma.dataengine.konqprofiles"
+        engine: "org.kde.katesessions"
         onSourceAdded: connectSource(source)
         onSourceRemoved: disconnectSource(source)
 
@@ -34,14 +34,14 @@ Item {
     }
 
     Component.onCompleted: {
-        plasmoid.popupIcon = QIcon("konqueror");
+        plasmoid.popupIcon = QIcon("kate");
         plasmoid.aspectRatioMode = IgnoreAspectRatio;
     }
 
 
     Text {
         id: header
-        text: "Konqueror Profiles"
+        text: "Kate Sessions"
         anchors { top: parent.top; left: parent.left; right: parent.right }
         horizontalAlignment: Text.AlignHCenter
     }

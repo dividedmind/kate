@@ -1,5 +1,5 @@
 /*****************************************************************************
-*   Copyright (C) 2011 by Shaun Reich <shaun.reich@kdemail.net>              *
+*   Copyright (C) 2011, 2012 by Shaun Reich <shaun.reich@kdemail.net>        *
 *   Copyright (C) 2008 by Montel Laurent <montel@kde.org>                    *
 *                                                                            *
 *   This program is free software; you can redistribute it and/or            *
@@ -33,7 +33,7 @@ KateProfilesEngine::KateProfilesEngine(QObject *parent, const QVariantList &args
 
 }
 
-KonqProfilesEngine::~KonqProfilesEngine()
+KateProfilesEngine::~KateProfilesEngine()
 {
 }
 
@@ -59,34 +59,25 @@ void KateProfilesEngine::profilesChanged()
 
 void KateProfilesEngine::loadProfiles()
 {
-    const QStringList lst = KGlobal::dirs()->findDirs( "data", "konqueror/profiles/" );
-    for ( int i = 0; i < lst.count(); i++ )
+    QStringList sessions = QStringList();
+    const QStringList list = KGlobal::dirs()->findAllResources( "data", QLatin1String("kate/sessions/*.katesession"), KStandardDirs::NoDuplicates );
+    kDebug() << "FOUND LIST: " << list;
+    KUrl url;
+    for (QStringList::ConstIterator it = list.constBegin(); it != list.constEnd(); ++it)
     {
-        m_dirWatch->addDir( lst[i] );
-    }
-
-    const QStringList list = KGlobal::dirs()->findAllResources( "data", "konqueror/profiles/*", KStandardDirs::NoDuplicates );
-    const QStringList::ConstIterator end = list.constEnd();
-
-   for (QStringList::ConstIterator it = list.constBegin(); it != end; ++it)
-    {
-        QFileInfo info(*it);
-        const QString profileName = KIO::decodeFileName(info.baseName());
-        QString niceName=profileName;
-        KConfig cfg(*it, KConfig::SimpleConfig);
-        if (cfg.hasGroup("Profile")) {
-
-            KConfigGroup grp(&cfg, "Profile");
-            if (grp.hasKey( "Name" )) {
-                niceName = grp.readEntry("Name");
-            }
-
-            setData("name:" + profileName, "name", profileName);
-            setData("name:" + profileName, "prettyName", niceName);
-        }
+        /*        KConfig _config( *it, KConfig::SimpleConfig );
+         *   KConfigGroup config(&_config, "General" );
+         *   QString name =  config.readEntry( "Name" );*/
+        url.setPath(*it);
+        QString name=url.fileName();
+        kDebug() << "FOUND NAME: " << name;
+        name = QUrl::fromPercentEncoding(QFile::encodeName(url.fileName()));
+        kDebug() << "translated: " << name;
+        name.chop(12);///.katesession==12
+        setData(name, QVariant());
     }
 }
 
-K_EXPORT_PLASMA_DATAENGINE(kateprofilesengine, KateProfilesEngine)
+K_EXPORT_PLASMA_DATAENGINE(katesessionsengine, KateProfilesEngine)
 
 #include "kateprofilesengine.moc"
