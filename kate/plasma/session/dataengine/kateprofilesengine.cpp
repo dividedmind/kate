@@ -61,20 +61,16 @@ void KateProfilesEngine::loadProfiles()
 {
     QStringList sessions = QStringList();
     const QStringList list = KGlobal::dirs()->findAllResources( "data", QLatin1String("kate/sessions/*.katesession"), KStandardDirs::NoDuplicates );
-    kDebug() << "FOUND LIST: " << list;
     KUrl url;
+
     for (QStringList::ConstIterator it = list.constBegin(); it != list.constEnd(); ++it)
     {
-        /*        KConfig _config( *it, KConfig::SimpleConfig );
-         *   KConfigGroup config(&_config, "General" );
-         *   QString name =  config.readEntry( "Name" );*/
         url.setPath(*it);
         QString name=url.fileName();
-        kDebug() << "FOUND NAME: " << name;
         name = QUrl::fromPercentEncoding(QFile::encodeName(url.fileName()));
-        kDebug() << "translated: " << name;
         name.chop(12);///.katesession==12
-        setData("name:" + name, QVariant());
+
+        setData("name:" + name, "prettyName", QVariant(name));
     }
 }
 

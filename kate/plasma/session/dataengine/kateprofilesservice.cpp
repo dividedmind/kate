@@ -41,17 +41,15 @@ ProfileJob::ProfileJob(KateProfilesService *service, const QString &operation, c
 
 void ProfileJob::start()
 {
-    //destination is the profile name, operation is e.g. "open"
- //   QMap<QString, QVariant>jobParameters = parameters();
+    // destination is the profile name, operation is e.g. "open"
+    // QMap<QString, QVariant>jobParameters = parameters();
     const QString operation = operationName();
 
-kDebug() << "SERVICE START...operation: " << operation << " dest: " << destination();
     if (operation == "open") {
-  //      Q_ASSERT(!jobParameters.isEmpty());
 
         QStringList args;
-        args << "--profile" << destination();
-        KToolInvocation::kdeinitExec("konsole", args);
+        args << "-s" << destination();
+        KToolInvocation::kdeinitExec("kate", args);
 
         setResult(true);
     }

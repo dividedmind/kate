@@ -22,14 +22,14 @@ import org.kde.plasma.core 0.1 as PlasmaCore
 import org.kde.plasma.components 0.1 as PlasmaComponents
 
 Item {
-    id: konsoleProfiles
+    id: kateSessions
 
     property int minimumWidth: 200
     property int minimumHeight: 300
 
     PlasmaCore.DataSource {
         id: profilesSource
-        engine: "org.kde.konsoleprofiles"
+        engine: "org.kde.katesessions"
         onSourceAdded: connectSource(source)
         onSourceRemoved: disconnectSource(source)
 
@@ -42,7 +42,7 @@ Item {
     }
 
     Component.onCompleted: {
-        plasmoid.popupIcon = "utilities-terminal";
+        plasmoid.popupIcon = "kate";
         plasmoid.aspectRatioMode = IgnoreAspectRatio;
     }
 
@@ -56,14 +56,14 @@ Item {
         anchors { left: parent.left; right: parent.right}
 
         QIconItem {
-            icon: QIcon("utilities-terminal")
+            icon: QIcon("kate")
             width: 32
             height: 32
         }
 
         PlasmaComponents.Label {
             id: header
-            text: i18n("Konsole Profiles")
+            text: i18n("Kate Sessions");
             anchors { horizontalCenter: parent.horizontalCenter }
             horizontalAlignment: Text.AlignHCenter
         }
@@ -110,7 +110,7 @@ Item {
                 hoverEnabled: true
 
                 onClicked: {
-                    var service = profilesSource.serviceForSource(model["DataEngineSource"])
+                    var service = profilesSource.serviceForSource(model.prettyName)
                     var operation = service.operationDescription("open")
                     var job = service.startOperationCall(operation)
                 }
