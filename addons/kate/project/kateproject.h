@@ -21,6 +21,7 @@
 #ifndef KATE_PROJECT_H
 #define KATE_PROJECT_H
 
+#include <QDir>
 #include <QThread>
 #include <QMap>
 #include <QSharedPointer>
@@ -108,6 +109,15 @@ class KateProject : public QObject
      * @return success
      */
     bool load (const QString &fileName);
+
+    /**
+     * Synthesize a project from a directory.
+     * The directory needs to be a git repository;
+     * the project name will be the same as the directory name.
+     * @param dir project directory
+     * @return success
+     */
+    bool synthesize (const QDir &dir);
 
     /**
      * Try to reload a project.
@@ -328,6 +338,15 @@ class KateProject : public QObject
      * Parent item for existing documents that are not in the project tree
      */
     QStandardItem *m_documentsParent;
+
+  protected:
+    /**
+     * Load (or reload) the project data from a configuration map.
+     * @param config project configuration, as parsed from JSON
+     * @param force reload even if nothing changes
+     * @return success
+     */
+    bool configure (const QVariantMap &config, bool force = false);
 };
 
 #endif
