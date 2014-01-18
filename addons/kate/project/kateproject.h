@@ -112,7 +112,7 @@ class KateProject : public QObject
 
     /**
      * Synthesize a project from a directory.
-     * The directory needs to be a git repository;
+     * The directory needs to be a git, svn or hg repository;
      * the project name will be the same as the directory name.
      * @param dir project directory
      * @return success
@@ -347,6 +347,11 @@ class KateProject : public QObject
      * @return success
      */
     bool configure (const QVariantMap &config, bool force = false);
+    
+    static int debugArea() {
+      static int s_area = KDebug::registerArea("kateproject");
+      return s_area;
+    }
 };
 
 #endif

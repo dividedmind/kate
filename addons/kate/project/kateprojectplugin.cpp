@@ -128,7 +128,7 @@ KateProject *KateProjectPlugin::createProjectForFileName (const QString &fileNam
   }
 }
 
-KateProject *KateProjectPlugin::createProjectForGitRepository (const QDir &dir)
+KateProject *KateProjectPlugin::createProjectForRepository (const QDir &dir)
 {
   KateProject *project = new KateProject ();
   if (project->synthesize (dir))
@@ -173,8 +173,8 @@ KateProject *KateProjectPlugin::projectForDir (QDir dir)
 
     if (dir.exists (".kateproject"))
       return createProjectForFileName (canonicalFileName);
-    else if (dir.exists (".git"))
-      return createProjectForGitRepository (dir);
+    else if (KateProject *project = createProjectForRepository (dir))
+      return project;
 
     /**
      * else: cd up, if possible or abort

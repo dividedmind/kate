@@ -53,19 +53,19 @@ class KateProjectPlugin : public Kate::Plugin
     KateProject *createProjectForFileName (const QString &fileName);
 
     /**
-     * Create new implicit project for a git repository in given directory.
-     * Null pointer if no git repository is found.
+     * Create new implicit project for a VCS repository in given directory.
+     * Null pointer if no repository is found.
      * The project name will equal the directory name.
      * @param dir directory to create the project for
      * @return project or null if no repo found
      */
-    KateProject *createProjectForGitRepository (const QDir &dir);
+    KateProject *createProjectForRepository (const QDir &dir);
     
     /**
      * Search and open project for given dir, if possible.
-     * Will search upwards for .kateproject file or a git repository.
+     * Will search upwards for .kateproject file or a VCS repository.
      * Will use internally projectForFileName if project file is found,
-     * and createProjectForGitRepository if a git repository is found.
+     * and createProjectForRepository to check for a repository.
      * @param dir dir to search matching project for
      * @return project or null if not openable
      */

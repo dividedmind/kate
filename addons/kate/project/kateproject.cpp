@@ -96,23 +96,31 @@ bool KateProject::synthesize (const QDir &dir)
   if (!m_fileName.isEmpty())
     return false;
 
-  if (!dir.exists(".git"))
-    return false;
+  static const QStringList vcses = (QStringList() << "git" << "hg" << "svn");
 
-  m_baseDir = dir.canonicalPath();
-  m_fileName = m_baseDir + QString("/.kateproject");
+  // note this relies for direct correspondence between marker dirnames
+  // and vcs project file tags
+  foreach (const QString &vcs, vcses) {
+    if (!dir.exists(QString(".").append(vcs)))
+      continue;
 
-  // just a simple project
-  // (it's a PITA to construct it in C++ :/ )
-  QVariantMap git, project;
-  QVariantList files;
+    m_baseDir = dir.canonicalPath();
+    m_fileName = m_baseDir + QString("/.kateproject");
 
-  git["git"] = 1;
-  files.append (git);
-  project["name"] = dir.dirName ();
-  project["files"] = files;
+    // just a simple project
+    // (it's a PITA to construct it in C++ :/ )
+    QVariantMap infiles, project;
+    QVariantList files;
 
-  return configure(project);
+    infiles[vcs] = 1;
+    files.append (infiles);
+    project["name"] = dir.dirName ();
+    project["files"] = files;
+
+    return configure(project);
+  }
+
+  return false; // if none found
 }
 
 bool KateProject::reload (bool force)
