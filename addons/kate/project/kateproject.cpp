@@ -91,6 +91,38 @@ bool KateProject::load (const QString &fileName)
   return reload ();
 }
 
+bool KateProject::synthesize (const QDir &dir)
+{
+  if (!m_fileName.isEmpty())
+    return false;
+
+  static const QStringList vcses = (QStringList() << "git" << "hg" << "svn");
+
+  // note this relies for direct correspondence between marker dirnames
+  // and vcs project file tags
+  foreach (const QString &vcs, vcses) {
+    if (!dir.exists(QString(".").append(vcs)))
+      continue;
+
+    m_baseDir = dir.canonicalPath();
+    m_fileName = m_baseDir + QString("/.kateproject");
+
+    // just a simple project
+    // (it's a PITA to construct it in C++ :/ )
+    QVariantMap infiles, project;
+    QVariantList files;
+
+    infiles[vcs] = 1;
+    files.append (infiles);
+    project["name"] = dir.dirName ();
+    project["files"] = files;
+
+    return configure(project);
+  }
+
+  return false; // if none found
+}
+
 bool KateProject::reload (bool force)
 {
   /**
@@ -109,11 +141,11 @@ bool KateProject::reload (bool force)
   if (!ok)
     return false;
 
-  /**
-   * now: get global group
-   */
-  QVariantMap globalProject = project.toMap ();
+  return configure (project.toMap(), force);
+}
 
+bool KateProject::configure (const QVariantMap &globalProject, bool force)
+{
   /**
    * no name, bad => bail out
    */

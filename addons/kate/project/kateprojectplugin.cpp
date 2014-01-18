@@ -120,16 +120,29 @@ KateProject *KateProjectPlugin::createProjectForFileName (const QString &fileNam
    * try to load or fail
    */
   KateProject *project = new KateProject ();
-  if (!project->load (fileName)) {
+  if (project->load (fileName))
+    return addProject (project);
+  else {
     delete project;
     return 0;
   }
+}
 
-  /**
-   * remember project and emit & return it
-   */
+KateProject *KateProjectPlugin::createProjectForRepository (const QDir &dir)
+{
+  KateProject *project = new KateProject ();
+  if (project->synthesize (dir))
+    return addProject (project);
+  else {
+    delete project;
+    return 0;
+  }
+}
+
+KateProject *KateProjectPlugin::addProject (KateProject *project)
+{
   m_projects.append(project);
-  m_fileWatcher.addPath (QFileInfo(fileName).canonicalPath());
+  m_fileWatcher.addPath (QFileInfo(project->fileName()).canonicalPath());
   emit projectCreated (project);
   return project;
 }
@@ -160,6 +173,8 @@ KateProject *KateProjectPlugin::projectForDir (QDir dir)
 
     if (dir.exists (".kateproject"))
       return createProjectForFileName (canonicalFileName);
+    else if (KateProject *project = createProjectForRepository (dir))
+      return project;
 
     /**
      * else: cd up, if possible or abort

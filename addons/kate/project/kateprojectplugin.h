@@ -51,11 +51,21 @@ class KateProjectPlugin : public Kate::Plugin
      * @return project or null if not openable
      */
     KateProject *createProjectForFileName (const QString &fileName);
+
+    /**
+     * Create new implicit project for a VCS repository in given directory.
+     * Null pointer if no repository is found.
+     * The project name will equal the directory name.
+     * @param dir directory to create the project for
+     * @return project or null if no repo found
+     */
+    KateProject *createProjectForRepository (const QDir &dir);
     
     /**
      * Search and open project for given dir, if possible.
-     * Will search upwards for .kateproject file.
-     * Will use internally projectForFileName if project file is found.
+     * Will search upwards for .kateproject file or a VCS repository.
+     * Will use internally projectForFileName if project file is found,
+     * and createProjectForRepository to check for a repository.
      * @param dir dir to search matching project for
      * @return project or null if not openable
      */
@@ -150,6 +160,12 @@ class KateProjectPlugin : public Kate::Plugin
      * Project completion
      */
     KateProjectCompletion m_completion;
+
+    /**
+     * Remember project, set up file watch and emit the projectCreated signal.
+     * @return the project itself
+     */
+    KateProject *addProject (KateProject *project);
 };
 
 #endif
